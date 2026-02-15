@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import jwt from 'jsonwebtoken';
 
+const secret = process.env.JWT_SECRET;
 
 export const getUserController = async (req, res) => {
     try {
@@ -20,6 +21,7 @@ export const getUserController = async (req, res) => {
             result: user
         });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: 'Server Error Occurred'
         });
@@ -92,7 +94,7 @@ export const userLoginController = async (req, res) => {
         await user.save();
         const token = jwt.sign({
             _id: user._id
-        }, process.env.JWT_SECRET,
+        }, secret,
             { expiresIn: '1h' }
         );
         return res.status(200).json({
